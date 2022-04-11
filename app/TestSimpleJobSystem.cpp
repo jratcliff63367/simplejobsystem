@@ -11,6 +11,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include "ThreadPool.h"
 
 #define ENABLE_SIMPLE_JOB_SYSTEM_IMPLEMENTATION 1
 #include "SimpleJobSystem.h"
@@ -59,6 +60,29 @@ void doTask(void *ptr)
 {
 	Timer t;
 	while ( t.peekElapsedSeconds() < TASK_TIME );
+}
+
+
+void performJobsThreadPool(uint32_t jobCycleCount,uint32_t jobTaskCount)
+{
+	ThreadPool pool(8);
+	std::future<int> *futures = new std::future<int>[jobTaskCount];
+	for (uint32_t i=0; i<jobCycleCount; i++)
+	{
+		for (uint32_t j=0; j<jobTaskCount; j++)
+		{
+			futures[j] = pool.enqueue([]
+			{
+				doTask(nullptr);
+				return 0;
+			});
+		}
+		for (uint32_t j=0; j<jobTaskCount; j++)
+		{
+			futures[j].get();
+		}
+	}
+	delete []futures;
 }
 
 void performJobs(uint32_t jobCycleCount,uint32_t jobTaskCount,simplejobsystem::SimpleJobSystem *sjs)
@@ -127,6 +151,10 @@ int main(int argc,const char **argv)
 				performJobs(jobCycleCount,jobTaskCount,sjs);
 			}
 			sjs->release();
+			{
+				ScopedTime st("ThreadPool");
+				performJobsThreadPool(jobCycleCount,jobTaskCount);
+			}
 		}
 	}
 	return 0;
