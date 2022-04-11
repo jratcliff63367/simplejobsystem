@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+/app/CMakeFiles/3.22.0-rc1
+/app/CMakeCache.txt
+/app/CMakeFiles/7fdf419865ac63d4818863d598832de7
+/app/CMakeFiles/CMakeOutput.log
+/app/CMakeFiles/TargetDirectories.txt
+/app/CMakeFiles/cmake.check_cache
+/app/CMakeFiles/generate.stamp
+/app/CMakeFiles/generate.stamp.depend
+/app/CMakeFiles/generate.stamp.list
+/app/CMakeLists.bak
+/app/Debug/TestSimpleJobSystem.pdb
+/app/Release/TestSimpleJobSystem.pdb
